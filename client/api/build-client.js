@@ -2,15 +2,15 @@ import axios from "axios";
 
 const buildClient = ({ req }) => {
   if (typeof window === "undefined") {
-    // We are on the server
-
+    // Used to fetch data when the window has not loaded
+    // Makes requests in the `getInitialProps` function
     return axios.create({
       baseURL:
         "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local",
       headers: req.headers,
     });
   } else {
-    // We must be on the browser
+    // Used to fetch data when the window has loaded
     return axios.create({
       baseUrl: "/",
     });
