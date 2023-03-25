@@ -7,9 +7,11 @@ import { currentUserRouter } from "./routes/current-user";
 import { signInRouter } from "./routes/signin";
 import { signOutRouter } from "./routes/signout";
 import { signUpRouter } from "./routes/signup";
-import { errorHandler } from "./middlewares/error-handler";
-import { NotFoundError } from "./errors/not-found-error";
 import cookieSession from "cookie-session";
+import {
+  errorHandler,
+  NotFoundError,
+} from "@nickiii-microservices-course/common";
 
 const app = express();
 // Tells express that requests will be coming in from a proxy (ingress nginx)

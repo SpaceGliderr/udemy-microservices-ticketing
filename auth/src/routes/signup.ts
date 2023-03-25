@@ -1,8 +1,10 @@
+import {
+  BadRequestError,
+  validateRequest,
+} from "@nickiii-microservices-course/common";
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { BadRequestError } from "../errors/bad-request-error";
-import { validateRequest } from "../middlewares/validate-request";
 import { User } from "../models/user";
 
 const router = express.Router();
