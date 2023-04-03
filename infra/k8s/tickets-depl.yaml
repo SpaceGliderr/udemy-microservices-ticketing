@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1 # Number of Pods we want to created
   selector: # A Deployment doesn't know which Pods to manage. The selector field tells the Deployment to look for the Pods with the specified label of `app = post` and manage them
     matchLabels:
-      app: auth
+      app: tickets
   template: # Specifies the exact configuration of the Pod that we want the Deployment to make
     # Template is thought of as the configuration file for a Kubernetes Pod
     metadata:
       labels: # The labels used to be matched by the selector
-        app: auth
+        app: tickets
     spec:
       containers:
-        - name: auth
-          image: nilchyyy/udemy-2-auth
+        - name: tickets
+          image: nilchyyy/udemy-2-tickets
           env:
             - name: MONGO_URI
-              value: "mongodb://auth-mongo-srv:27017/auth"
+              value: "mongodb://tickets-mongo-srv:27017/tickets"
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -28,13 +28,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   type: ClusterIP
   selector: # Needs to know what Pods to expose to external resources, supposed to match the template label in the deployment config file
-    app: auth
+    app: tickets
   ports:
-    - name: auth # logging purposes
+    - name: tickets # logging purposes
       protocol: TCP
       port: 3000 # The port used by the Service to receive information from external sources
       targetPort: 3000 # The port used by the Pod within a node to receive information
