@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-depl
+spec:
+  replicas: 1 # Number of Pods we want to created
+  selector: # A Deployment doesn't know which Pods to manage. The selector field tells the Deployment to look for the Pods with the specified label of `app = post` and manage them
+    matchLabels:
+      app: orders
+  template: # Specifies the exact configuration of the Pod that we want the Deployment to make
+    # Template is thought of as the configuration file for a Kubernetes Pod
+    metadata:
+      labels: # The labels used to be matched by the selector
+        app: orders
+    spec:
+      containers:
+        - name: orders
+          image: nilchyyy/udemy-2-orders
+          env:
+            - name: MONGO_URI
+              value: "mongodb://orders-mongo-srv:27017/orders"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: udemy-jwt-secret
+                  key: JWT_KEY
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: ticketing
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name # Gets the Pod name as the Client ID
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-srv
+spec:
+  type: ClusterIP
+  selector: # Needs to know what Pods to expose to external resources, supposed to match the template label in the deployment config file
+    app: orders
+  ports:
+    - name: orders # logging purposes
+      protocol: TCP
+      port: 3000 # The port used by the Service to receive information from external sources
+      targetPort: 3000 # The port used by the Pod within a node to receive information
