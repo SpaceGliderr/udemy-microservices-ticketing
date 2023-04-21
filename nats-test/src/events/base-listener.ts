@@ -23,7 +23,7 @@ export abstract class Listener<T extends Event> {
       .subscriptionOptions()
       .setDeliverAllAvailable()
       .setManualAckMode(true)
-      .setAckWait(this.ackWait)
+      .setAckWait(this.ackWait * 1000)
       .setDurableName(this.queueGroupName);
   }
 
