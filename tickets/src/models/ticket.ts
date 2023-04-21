@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 // Describes the attributes needed to create Ticket
 interface TicketAttrs {
@@ -17,6 +18,7 @@ interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+  version: number;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -46,6 +48,9 @@ const ticketSchema = new mongoose.Schema(
     },
   }
 );
+
+ticketSchema.set("versionKey", "version");
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 // If we want to enforce the TS attribute checking, create a static function using the interface as the arguments
 // Then feed it into the schema
