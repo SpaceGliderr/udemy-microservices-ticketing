@@ -1,5 +1,6 @@
 import { OrderStatus } from "@nickiii-microservices-course/common";
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 import { TicketDoc } from "./ticket";
 
 // Describes the attributes needed to create Order
@@ -21,6 +22,7 @@ interface OrderDoc extends mongoose.Document {
   status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
+  version: number;
 }
 
 const orderSchema = new mongoose.Schema(
@@ -55,6 +57,9 @@ const orderSchema = new mongoose.Schema(
     },
   }
 );
+
+orderSchema.set("versionKey", "version");
+orderSchema.plugin(updateIfCurrentPlugin);
 
 // If we want to enforce the TS attribute checking, create a static function using the interface as the arguments
 // Then feed it into the schema
